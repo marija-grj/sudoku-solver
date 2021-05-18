@@ -4,12 +4,14 @@ from data.sudoku_data import easy
 from charles.utils import draw
 
 class Individual:
-    def __init__(self, problem, initialization='random'):
+    def __init__(self, problem, initialization='random', fitness='unique'):
+        np.random.seed()
         if type(problem) != 'numpy.array':
             problem = np.asarray(problem)
         if initialization == 'random':
             self.representation = np.where(problem > 0, problem, np.random.randint(1, 10, (9,9)))
-        self.fitness = self.evaluate()
+        if fitness == 'unique':
+            self.fitness = self.evaluate_unique()
         self.problem = problem
     
     # def __array__(self): 
@@ -24,7 +26,7 @@ class Individual:
     def transpose(self):
         return np.transpose(self.representation)
     
-    def evaluate(self):
+    def evaluate_unique(self):
         """
         Sum of number of unique numbers in each row, column and box. 
         Minimum fitness is 27 (all numbers are the same), maximum (target) fitness is 243.
@@ -42,9 +44,7 @@ class Individual:
     def __repr__(self):
         return f"Individual:\n{self.representation} \nFitness: {self.fitness}"
     
-if __name__ == '__main__':
-    ind = Individual(easy)
-    print(ind)
-    draw(ind.problem)
+
+    
 
     
