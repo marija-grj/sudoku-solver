@@ -10,6 +10,7 @@ class Individual:
         if initialization == 'random':
             self.representation = np.where(problem > 0, problem, np.random.randint(1, 10, (9,9)))
         self.fitness = self.evaluate()
+        self.problem = problem
     
     # def __array__(self): 
     #     return np.array(self.representation)
@@ -38,8 +39,12 @@ class Individual:
     
         return int(row_fitness + column_fitness + box_fitness)
     
+    def __repr__(self):
+        return f"Individual:\n{self.representation} \nFitness: {self.fitness}"
+    
 if __name__ == '__main__':
     ind = Individual(easy)
-    draw(ind)
-    print(f"Fitness: {ind.fitness}")
+    print(ind)
+    draw(ind.problem)
+
     
