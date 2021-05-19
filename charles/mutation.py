@@ -1,6 +1,7 @@
 from random import randint, sample
+import numpy as np
 
-def swap_in_row(individual):
+def swap_in_row(individual, problem):
     """Swap mutation within a random sudoku row
 
     Args:
@@ -9,15 +10,17 @@ def swap_in_row(individual):
     Returns:
         Individual: Mutated Individual
     """
-    # Get two mutation points in a random row
-    mut_points = ...
-    
+    # Get a random row to perform a mutation
+    row = randint(0,9)
+    # Get two mutation points in a random row.
+    # Only for numbers that are not given as a problem (i.e. are zeros in the problem)
+    mut_points = sample(np.where(problem[row] == 0)[0].tolist(), 2)
     # Rename to shorten variable name
     i = individual
 
-    individual[mut_points[0]], individual[mut_points[1]] = i[mut_points[1]], i[mut_points[0]]
+    i[row, mut_points[0]], i[row, mut_points[1]] = i[row, mut_points[1]], i[row, mut_points[0]]
 
-    return individual
+    return i
 
 def swap_in_column(individual):
     """Swap mutation within a random sudoku column
