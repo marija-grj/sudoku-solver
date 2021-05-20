@@ -1,5 +1,5 @@
 import numpy as np
-
+from .utils import box_to_row
 
 def sp_co_row(p1, p2):
     """Implementation of row-based single point crossover.
@@ -41,8 +41,17 @@ def sp_co_box(p1, p2):
     Returns:
         Individuals: Two offspring, resulting from the crossover.
     """
-
-    # return offspring1, offspring2
+    co_box = np.random.randint(1, 9)
+    # Convert parents' boxes into rows
+    p1_flat = box_to_row(p1)
+    p2_flat = box_to_row(p2)
+    # Row-based single point crossover
+    offspring1_flat = np.concatenate((p1_flat[:co_box], p2_flat[co_box:]), axis=0)
+    offspring2_flat = np.concatenate((p2_flat[:co_box], p1_flat[co_box:]), axis=0)
+    # Convert rows to back to boxes
+    offspring1 = box_to_row(offspring1_flat)
+    offspring2 = box_to_row(offspring2_flat)
+    return offspring1, offspring2
 
 def sp_co_cell(p1, p2):
     """Implementation of cell-based single point crossover.
