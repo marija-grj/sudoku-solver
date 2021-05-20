@@ -1,4 +1,4 @@
-from random import randint, sample
+from random import sample
 import numpy as np
 
 def swap_in_row(individual, problem):
@@ -11,10 +11,10 @@ def swap_in_row(individual, problem):
         Individual: Mutated Individual
     """
     # Get a random row to perform a mutation
-    row = randint(0,9)
+    row = np.random.randint(0,9)
     # Get two mutation points in a random row.
     # Only for numbers that are not given as a problem (i.e. are zeros in the problem)
-    mut_points = sample(np.where(problem[row] == 0)[0].tolist(), 2)
+    mut_points = np.random.choice(np.where(problem[row] == 0)[0], 2)
     # Rename to shorten variable name
     i = individual
 
