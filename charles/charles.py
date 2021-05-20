@@ -1,5 +1,6 @@
 import numpy as np
 from operator import  attrgetter
+from .utils import box_to_row
 
 class Individual:
     def __init__(self, problem, representation=None, initialization='random', fitness='unique'):
@@ -34,11 +35,7 @@ class Individual:
         """
         row_fitness = sum([len(set(row)) for row in self.representation])
         column_fitness = sum([len(set(row)) for row in self.representation.transpose()])
-        # each of 9 boxes base coordinates (top left corner)
-        box_base = [[x,y] for x in [0,3,6] for y in [0,3,6]] 
-        # matrix where each row is flattened box content
-        boxes_flattened = np.array([list(self.representation[b[0]:b[0]+3, b[1]:b[1]+3].flatten()) for b in box_base])
-        box_fitness = sum([len(set(row)) for row in boxes_flattened])
+        box_fitness = sum([len(set(row)) for row in box_to_row(self.representation)])
     
         return int(row_fitness + column_fitness + box_fitness)
     
