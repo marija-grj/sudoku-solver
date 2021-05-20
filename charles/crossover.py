@@ -63,5 +63,12 @@ def sp_co_cell(p1, p2):
     Returns:
         Individuals: Two offspring, resulting from the crossover.
     """
-
-    # return offspring1, offspring2
+    co_cel = np.random.randint(1, 9)
+    h, w = p1.shape
+    p1_flat = p1.flatten()
+    p2_flat = p2.flatten()
+    child1_flat = np.concatenate((p1_flat[:,:co_cel],p2_flat[:,co_cel:]), axis = 1)
+    child2_flat = np.concatenate((p2_flat[:,:co_cel],p1_flat[:,co_cel:]), axis = 1)
+    offspring1 = child1_flat.reshape(h,w)
+    offspring2 = child2_flat.reshape(h,w)
+    return offspring1, offspring2
