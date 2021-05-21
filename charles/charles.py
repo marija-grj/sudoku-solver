@@ -42,6 +42,11 @@ class Individual:
     def __repr__(self):
         return f"Individual:\n{self.representation} \nFitness: {self.fitness}"
     
+    def flatten(self):
+        return self.representation.flatten()
+    
+    def box_to_row(self):
+        return box_to_row(self.representation)
 
 class Population:
     def __init__(self, size, optim, problem, initialization='random', fitness='unique'):
