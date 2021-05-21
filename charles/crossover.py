@@ -43,8 +43,8 @@ def sp_co_box(p1, p2):
     """
     co_box = np.random.randint(1, 9)
     # Convert parents' boxes into rows
-    p1_flat = p1.box_to_row()
-    p2_flat = p2.box_to_row()
+    p1_flat = box_to_row(p1)
+    p2_flat = box_to_row(p2)
     # Row-based single point crossover
     offspring1_flat = np.concatenate((p1_flat[:co_box], p2_flat[co_box:]), axis=0)
     offspring2_flat = np.concatenate((p2_flat[:co_box], p1_flat[co_box:]), axis=0)
