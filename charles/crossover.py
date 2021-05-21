@@ -55,34 +55,28 @@ def sp_co_box(p1, p2):
 
 def sp_co_cell(p1, p2):
     """Implementation of cell-based single point crossover.
-
     Args:
         p1 (Individual): First parent for crossover.
         p2 (Individual): Second parent for crossover.
-
     Returns:
         Individuals: Two offspring, resulting from the crossover.
     """
-    h, w = p1.shape
-    co_cel = np.random.randint(1, h)
-    p1_flat,p2_flat = p1.flatten(),p2.flatten()
-    child1_flat = np.concatenate((p1_flat[:,:co_cel],p2_flat[:,co_cel:]), axis = 1)
-    child2_flat = np.concatenate((p2_flat[:,:co_cel],p1_flat[:,co_cel:]), axis = 1)
-    offspring1 = child1_flat.reshape(h,w)
-    offspring2 = child2_flat.reshape(h,w)
+    co_cel = np.random.randint(1, 9)
+    p1_flat, p2_flat = p1.flatten(), p2.flatten()
+    offspring1 = np.concatenate((p1_flat[:co_cel], p2_flat[co_cel:])).reshape(9, 9)
+    offspring2 = np.concatenate((p2_flat[:co_cel], p1_flat[co_cel:])).reshape(9, 9)
     return offspring1, offspring2
 
-def tp_co_cell(p1,p2):
-    h, w = p1.shape
-    cpoints = np.random.randint(1, h*w, size=2)
-    while cpoints[0] >= cpoints[1]:
-        cpoints = np.random.randint(1, h*w, size=2)
-    cpoint_1,cpoint_2 = cpoints[0],cpoints[-1]
-    p1_flat,p2_flat = p1.flatten(),p2.flatten()
-    child1_flat = p1_flat[:,:cpoint_1],p2_flat[:,cpoint_1:cpoint_2],p1_flat[:,cpoint_2:]
-    child2_flat = p2_flat[:,:cpoint_1],p1_flat[:,cpoint_1:cpoint_2],p2_flat[:,cpoint_2:]
-    child1_flat = np.hstack(child1_flat)
-    child2_flat = np.hstack(child2_flat)
-    offspring1 = child1_flat.reshape(h,w)
-    offspring2 = child1_flat.reshape(h,w)
+def tp_co_cell(p1, p2):
+    """Implementation of cell-based two point crossover.
+    Args:
+        p1 (Individual): First parent for crossover.
+        p2 (Individual): Second parent for crossover.
+    Returns:
+        Individuals: Two offspring, resulting from the crossover.
+    """
+    cc = np.random.randint(1, 81, size=2)
+    p1_flat, p2_flat = p1.flatten(), p2.flatten()
+    offspring1 = np.concatenate((p1_flat[:cc.min()], p2_flat[cc.min():cc.max()], p1_flat[cc.max():])).reshape(9, 9)
+    offspring2 = np.concatenate((p2_flat[:cc.min()], p1_flat[cc.min():cc.max()], p2_flat[cc.max():])).reshape(9, 9)
     return offspring1, offspring2
