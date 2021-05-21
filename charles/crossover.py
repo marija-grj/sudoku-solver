@@ -72,3 +72,20 @@ def sp_co_cell(p1, p2):
     offspring1 = child1_flat.reshape(h,w)
     offspring2 = child2_flat.reshape(h,w)
     return offspring1, offspring2
+
+def tp_co_cell(p1,p2):
+    h, w = p1.shape
+    cpoints = np.random.randint(1, 81, size=2)
+    while cpoints[0] >= cpoints[1]:
+        cpoints = np.random.randint(1, 81, size=2)
+    cpoint_1 = cpoints[0]
+    cpoint_2 = cpoints[-1]
+    p1_flat = p1.flatten()
+    p2_flat = p2.flatten()
+    child1_flat = p1_flat[:,:cpoint_1],p2_flat[:,cpoint_1:cpoint_2],p1_flat[:,cpoint_2:]
+    child2_flat = p2_flat[:,:cpoint_1],p1_flat[:,cpoint_1:cpoint_2],p2_flat[:,cpoint_2:]
+    child1_flat = np.hstack(child1_flat)
+    child2_flat = np.hstack(child2_flat)
+    offspring1 = child1_flat.reshape(h,w)
+    offspring2 = child1_flat.reshape(h,w)
+    return offspring1, offspring2
