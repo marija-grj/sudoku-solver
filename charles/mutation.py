@@ -1,14 +1,15 @@
-from random import sample
 import numpy as np
+from .utils import box_to_row
 
 def swap_in_row(individual, problem):
     """Swap mutation within a random sudoku row
 
     Args:
-        individual (Individual): Potential sudoku solution
+        individual (Individual.representation): Potential sudoku solution
+        problem (Individual.problem): Initial sudoku problem
 
     Returns:
-        Individual: Mutated Individual
+        (array): Mutated Individual
     """
     # Get a random row to perform a mutation
     row = np.random.randint(0,9)
@@ -22,40 +23,46 @@ def swap_in_row(individual, problem):
 
     return i
 
-def swap_in_column(individual):
+def swap_in_column(individual, problem):
     """Swap mutation within a random sudoku column
 
     Args:
-        individual (Individual): Potential sudoku solution
+        individual (Individual.representation): Potential sudoku solution
+        problem (Individual.problem): Initial sudoku problem
 
     Returns:
-        Individual: Mutated Individual
+        (array): Mutated Individual
     """
-    # Get two mutation points in a random column
-    mut_points = ...
-    
+    # Get a random column to perform a mutation
+    col = np.random.randint(0,9)
+    # Get two mutation points in a random column.
+    # Only for numbers that are not given as a problem (i.e. are zeros in the problem)
+    mut_points = np.random.choice(np.where(problem[:,col] == 0)[0], 2)
     # Rename to shorten variable name
     i = individual
 
-    individual[mut_points[0]], individual[mut_points[1]] = i[mut_points[1]], i[mut_points[0]]
+    i[mut_points[0], col], i[mut_points[1], col] = i[mut_points[1], col], i[mut_points[0], col]
 
-    return individual
+    return i
 
-def swap_in_box(individual):
+def swap_in_box(individual, problem):
     """Swap mutation within a random sudoku box
 
     Args:
-        individual (Individual): Potential sudoku solution
+        individual (Individual.representation): Potential sudoku solution
+        problem (Individual.problem): Initial sudoku problem
 
     Returns:
-        Individual: Mutated Individual
+        (array): Mutated Individual
     """
-    # Get two mutation points in a random box
-    mut_points = ...
-    
+    # Get a random box to perform a mutation
+    box = np.random.randint(0,9)
+    # Get two mutation points in a random box.
+    # Only for numbers that are not given as a problem (i.e. are zeros in the problem)
+    mut_points = np.random.choice(np.where(box_to_row(problem)[box] == 0)[0], 2)
     # Rename to shorten variable name
-    i = individual
+    i = box_to_row(individual)
 
-    individual[mut_points[0]], individual[mut_points[1]] = i[mut_points[1]], i[mut_points[0]]
+    i[box, mut_points[0]], i[box, mut_points[1]] = i[box, mut_points[1]], i[box, mut_points[0]]
 
-    return individual
+    return box_to_row(i)
