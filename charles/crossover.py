@@ -63,10 +63,9 @@ def sp_co_cell(p1, p2):
     Returns:
         Individuals: Two offspring, resulting from the crossover.
     """
-    co_cel = np.random.randint(1, 9)
     h, w = p1.shape
-    p1_flat = p1.flatten()
-    p2_flat = p2.flatten()
+    co_cel = np.random.randint(1, h)
+    p1_flat,p2_flat = p1.flatten(),p2.flatten()
     child1_flat = np.concatenate((p1_flat[:,:co_cel],p2_flat[:,co_cel:]), axis = 1)
     child2_flat = np.concatenate((p2_flat[:,:co_cel],p1_flat[:,co_cel:]), axis = 1)
     offspring1 = child1_flat.reshape(h,w)
@@ -75,13 +74,11 @@ def sp_co_cell(p1, p2):
 
 def tp_co_cell(p1,p2):
     h, w = p1.shape
-    cpoints = np.random.randint(1, 81, size=2)
+    cpoints = np.random.randint(1, h*w, size=2)
     while cpoints[0] >= cpoints[1]:
-        cpoints = np.random.randint(1, 81, size=2)
-    cpoint_1 = cpoints[0]
-    cpoint_2 = cpoints[-1]
-    p1_flat = p1.flatten()
-    p2_flat = p2.flatten()
+        cpoints = np.random.randint(1, h*w, size=2)
+    cpoint_1,cpoint_2 = cpoints[0],cpoints[-1]
+    p1_flat,p2_flat = p1.flatten(),p2.flatten()
     child1_flat = p1_flat[:,:cpoint_1],p2_flat[:,cpoint_1:cpoint_2],p1_flat[:,cpoint_2:]
     child2_flat = p2_flat[:,:cpoint_1],p1_flat[:,cpoint_1:cpoint_2],p2_flat[:,cpoint_2:]
     child1_flat = np.hstack(child1_flat)
