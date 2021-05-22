@@ -11,7 +11,7 @@ def sp_co_row(p1, p2):
     Returns:
         Individuals: Two offspring, resulting from the crossover.
     """
-    co_row = np.random.randint(1, 9)
+    co_row = np.random.choice(9, 1)
     offspring1 = np.concatenate((p1[:co_row], p2[co_row:]), axis=0)
     offspring2 = np.concatenate((p2[:co_row], p1[co_row:]), axis=0)
     return offspring1, offspring2
@@ -26,7 +26,7 @@ def sp_co_column(p1, p2):
     Returns:
         Individuals: Two offspring, resulting from the crossover.
     """
-    co_col = np.random.randint(1, 9)
+    co_col = np.random.choice(9, 1)
     offspring1 = np.concatenate((p1[:,:co_col], p2[:,co_col:]), axis=1)
     offspring2 = np.concatenate((p2[:,:co_col], p1[:,co_col:]), axis=1)
     return offspring1, offspring2
@@ -41,7 +41,7 @@ def sp_co_box(p1, p2):
     Returns:
         Individuals: Two offspring, resulting from the crossover.
     """
-    co_box = np.random.randint(1, 9)
+    co_box = np.random.choice(9, 1)
     # Convert parents' boxes into rows
     p1_flat = box_to_row(p1)
     p2_flat = box_to_row(p2)
@@ -61,7 +61,7 @@ def sp_co_cell(p1, p2):
     Returns:
         Individuals: Two offspring, resulting from the crossover.
     """
-    co_cel = np.random.randint(1, 9)
+    co_cel = np.random.choice(9, 1)
     p1_flat, p2_flat = p1.flatten(), p2.flatten()
     offspring1 = np.concatenate((p1_flat[:co_cel], p2_flat[co_cel:])).reshape(9, 9)
     offspring2 = np.concatenate((p2_flat[:co_cel], p1_flat[co_cel:])).reshape(9, 9)
@@ -75,7 +75,7 @@ def tp_co_cell(p1, p2):
     Returns:
         Individuals: Two offspring, resulting from the crossover.
     """
-    cc = np.random.randint(1, 81, size=2)
+    cc = np.random.choice(81, 2 , replace= False)
     p1_flat, p2_flat = p1.flatten(), p2.flatten()
     offspring1 = np.concatenate((p1_flat[:cc.min()], p2_flat[cc.min():cc.max()], p1_flat[cc.max():])).reshape(9, 9)
     offspring2 = np.concatenate((p2_flat[:cc.min()], p1_flat[cc.min():cc.max()], p2_flat[cc.max():])).reshape(9, 9)
@@ -89,11 +89,9 @@ def tp_co_row(p1, p2):
     Returns:
         Individuals: Two offsprings, resulting from the crossover.
     """
-    cc = np.random.randint(1, 9, size=2)
-    offspring1 = p1.copy()
-    offspring2 = p2.copy()
-    offspring1 = np.concatenate((offspring1[:cc.min()],offspring2[cc.min():cc.max()],offspring1[cc.max():]))
-    offspring2 = np.concatenate((offspring2[:cc.min()],offspring1[cc.min():cc.max()],offspring2[cc.max():]))
+    cc = np.random.choice(9, 2, replace= False)
+    offspring1 = np.concatenate((p1[:cc.min()],p2[cc.min():cc.max()],p1[cc.max():]))
+    offspring2 = np.concatenate((p2[:cc.min()],p1[cc.min():cc.max()],p2[cc.max():]))
     return offspring1, offspring2
 
 def tp_co_column(p1, p2):
@@ -104,11 +102,9 @@ def tp_co_column(p1, p2):
     Returns:
         Individuals: Two offsprings, resulting from the crossover.
     """
-    cc = np.random.randint(1, 9, size=2)
-    offspring1 = p1.copy()
-    offspring2 = p2.copy()
-    offspring1 = np.concatenate((offspring1[:,:cc.min()],offspring2[:,cc.min():cc.max()],offspring1[:,cc.max():]), axis=1)
-    offspring2 = np.concatenate((offspring2[:,:cc.min()],offspring1[:,cc.min():cc.max()],offspring2[:,cc.max():]), axis=1)
+    cc = np.random.choice(9, 2, replace= False)
+    offspring1 = np.concatenate((p1[:,:cc.min()],p2[:,cc.min():cc.max()],p1[:,cc.max():]), axis=1)
+    offspring2 = np.concatenate((p2[:,:cc.min()],p1[:,cc.min():cc.max()],p2[:,cc.max():]), axis=1)
     return offspring1, offspring2
 
 def tp_co_box(p1, p2):
@@ -119,14 +115,14 @@ def tp_co_box(p1, p2):
     Returns:
         Individuals: Two offsprings, resulting from the crossover.
     """
-    cc = np.random.randint(1, 9, size=2)
+    cc = np.random.choice(9, 2, replace= False)
     # Convert parents' boxes into rows
     p1_flat = box_to_row(p1)
     p2_flat = box_to_row(p2)
     # Row-based single point crossover
-    p1_flat = np.concatenate((p1_flat[:cc.min()],p2_flat[cc.min():cc.max()],p1_flat[cc.max():]))
-    p2_flat = np.concatenate((p2_flat[:cc.min()],p1_flat[cc.min():cc.max()],p2_flat[cc.max():]))
+    offspring1_flat = np.concatenate((p1_flat[:cc.min()],p2_flat[cc.min():cc.max()],p1_flat[cc.max():]))
+    offspring2_flat = np.concatenate((p2_flat[:cc.min()],p1_flat[cc.min():cc.max()],p2_flat[cc.max():]))
     # Convert rows to back to boxes
-    offspring1 = box_to_row(p1_flat)
-    offspring2 = box_to_row(p2_flat)
-    return p1_flat, offspring2
+    offspring1 = box_to_row(offspring1_flat)
+    offspring2 = box_to_row(offspring2_flat)
+    return offspring1, offspring2
