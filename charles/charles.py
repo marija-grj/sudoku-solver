@@ -70,7 +70,7 @@ class Population:
     def __repr__(self):
         return f"Population(size={self.size}, generation={self.gen})"
     
-    def evolve(self, gens, select, crossover, mutate, co_prob, mu_prob):
+    def evolve(self, gens, select, crossover, mutate, co_prob, mu_prob, verbose=False):
         for gen in range(gens):
             new_pop = []
             while len(new_pop) < self.size:
@@ -93,6 +93,7 @@ class Population:
                 
             self.individuals = new_pop
             self.gen += 1
+            if verbose: print(f'Generation {gen+2}, Best fitness: {max(self, key=attrgetter("fitness")).fitness}')
             
         if self.optim == "max":
             print(f'Best Individual: {max(self, key=attrgetter("fitness"))}; Goal: {(9*9*3)}')
