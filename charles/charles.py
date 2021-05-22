@@ -71,6 +71,7 @@ class Population:
         return f"Population(size={self.size}, generation={self.gen})"
     
     def evolve(self, gens, select, crossover, mutate, co_prob, mu_prob, verbose=False):
+        fitnesses = []
         for gen in range(gens):
             new_pop = []
             while len(new_pop) < self.size:
@@ -93,10 +94,16 @@ class Population:
                 
             self.individuals = new_pop
             # Early stopping
-            if (self.optim == "max") & (max(self, key=attrgetter("fitness")).fitness == 243):
-                break
-            elif (self.optim == "min") & (min(self, key=attrgetter("fitness")).fitness == 0):
-                break
+            if self.optim == "max":
+                best_fitness = max(self, key=attrgetter("fitness")).fitness
+                fitnesses.append(best_fitness)
+                if best_fitness == 243:
+                    break
+            elif self.optim == "min":
+                best_fitness = min(self, key=attrgetter("fitness")).fitness
+                fitnesses.append(best_fitness)
+                if best_fitness == 0:
+                    break
             
             self.gen += 1
             # Print logs if verbose is True
@@ -108,3 +115,4 @@ class Population:
             print(f'Generation: {self.gen} \nBest Individual: \n{min(self, key=attrgetter("fitness"))}; \nGoal: 0')
             
         print("Done")
+        return fitnesses
