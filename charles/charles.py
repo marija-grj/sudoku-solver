@@ -92,12 +92,19 @@ class Population:
                     new_pop.append(Individual(representation=offspring2, puzzle=self.puzzle))
                 
             self.individuals = new_pop
+            # Early stopping
+            if (self.optim == "max") & (max(self, key=attrgetter("fitness")).fitness == 243):
+                break
+            elif (self.optim == "min") & (min(self, key=attrgetter("fitness")).fitness == 0):
+                break
+            
             self.gen += 1
+            # Print logs if verbose is True
             if verbose: print(f'Generation {gen+2}, Best fitness: {max(self, key=attrgetter("fitness")).fitness}')
             
         if self.optim == "max":
-            print(f'Best Individual: {max(self, key=attrgetter("fitness"))}; Goal: {(9*9*3)}')
+            print(f'Generation: {self.gen} \nBest Individual: \n{max(self, key=attrgetter("fitness"))}; \nGoal: {(9*9*3)}')
         elif self.optim == "min":
-            print(f'Best Individual: {min(self, key=attrgetter("fitness"))}; Goal: 0')
+            print(f'Generation: {self.gen} \nBest Individual: \n{min(self, key=attrgetter("fitness"))}; \nGoal: 0')
             
         print("Done")
