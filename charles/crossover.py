@@ -80,3 +80,53 @@ def tp_co_cell(p1, p2):
     offspring1 = np.concatenate((p1_flat[:cc.min()], p2_flat[cc.min():cc.max()], p1_flat[cc.max():])).reshape(9, 9)
     offspring2 = np.concatenate((p2_flat[:cc.min()], p1_flat[cc.min():cc.max()], p2_flat[cc.max():])).reshape(9, 9)
     return offspring1, offspring2
+
+def tp_co_row(p1, p2):
+    """Implementation of two-point single row crossover.
+    Args:
+        p1 (Individual): First parent for crossover.
+        p2 (Individual): Second parent for crossover.
+    Returns:
+        Individuals: Two offsprings, resulting from the crossover.
+    """
+    cc = np.random.randint(1, 9, size=2)
+    offspring1 = p1.copy()
+    offspring2 = p2.copy()
+    offspring1 = np.concatenate((offspring1[:cc.min()],offspring2[cc.min():cc.max()],offspring1[cc.max():]))
+    offspring2 = np.concatenate((offspring2[:cc.min()],offspring1[cc.min():cc.max()],offspring2[cc.max():]))
+    return offspring1, offspring2
+
+def tp_co_column(p1, p2):
+    """Implementation of two-point single column crossover.
+    Args:
+        p1 (Individual): First parent for crossover.
+        p2 (Individual): Second parent for crossover.
+    Returns:
+        Individuals: Two offsprings, resulting from the crossover.
+    """
+    cc = np.random.randint(1, 9, size=2)
+    offspring1 = p1.copy()
+    offspring2 = p2.copy()
+    offspring1 = np.concatenate((offspring1[:,:cc.min()],offspring2[:,cc.min():cc.max()],offspring1[:,cc.max():]), axis=1)
+    offspring2 = np.concatenate((offspring2[:,:cc.min()],offspring1[:,cc.min():cc.max()],offspring2[:,cc.max():]), axis=1)
+    return offspring1, offspring2
+
+def tp_co_box(p1, p2):
+    """Implementation of two-point single box crossover.
+    Args:
+        p1 (Individual): First parent for crossover.
+        p2 (Individual): Second parent for crossover.
+    Returns:
+        Individuals: Two offsprings, resulting from the crossover.
+    """
+    cc = np.random.randint(1, 9, size=2)
+    # Convert parents' boxes into rows
+    p1_flat = box_to_row(p1)
+    p2_flat = box_to_row(p2)
+    # Row-based single point crossover
+    p1_flat = np.concatenate((p1_flat[:cc.min()],p2_flat[cc.min():cc.max()],p1_flat[cc.max():]))
+    p2_flat = np.concatenate((p2_flat[:cc.min()],p1_flat[cc.min():cc.max()],p2_flat[cc.max():]))
+    # Convert rows to back to boxes
+    offspring1 = box_to_row(p1_flat)
+    offspring2 = box_to_row(p2_flat)
+    return p1_flat, offspring2
