@@ -3,21 +3,21 @@ from operator import  attrgetter
 from .utils import box_to_row
 
 class Individual:
-    def __init__(self, problem, representation=None, initialization='random', fitness='unique'):
+    def __init__(self, puzzle, representation=None, initialization='random', fitness='unique'):
         np.random.seed()
-        if type(problem) != np.ndarray:
-            problem = np.asarray(problem)
+        if type(puzzle) != np.ndarray:
+            puzzle = np.asarray(puzzle)
         if type(representation) == np.ndarray:
             self.representation = representation
         elif representation == None:    
             if initialization == 'random':
-                self.representation = np.where(problem > 0, problem, np.random.randint(1, 10, (9,9)))
+                self.representation = np.where(puzzle > 0, puzzle, np.random.randint(1, 10, (9,9)))
         else:
             raise TypeError('Representation is not an numpy.ndarray nor None')
             
         if fitness == 'unique':
             self.fitness = self.evaluate_unique()
-        self.problem = problem
+        self.puzzle = puzzle
     
     def __getitem__(self, position):
         return self.representation[position]
@@ -49,16 +49,16 @@ class Individual:
         return box_to_row(self.representation)
 
 class Population:
-    def __init__(self, size, optim, problem, initialization='random', fitness='unique'):
+    def __init__(self, size, optim, puzzle, initialization='random', fitness='unique'):
         self.individuals = []
         self.size = size 
         self.optim = optim # 'min' or 'max'
-        self.problem = np.asarray(problem) # sudoku problem from sudoku_data: 'easy', 'hard', ...
+        self.puzzle = np.asarray(puzzle) # sudoku puzzle from sudoku_data: 'easy', 'hard', ...
         self.gen = 1
         for _ in range(size):
             self.individuals.append(
                 Individual(
-                    problem = problem,
+                    puzzle = puzzle,
                     initialization = initialization,
                     fitness = fitness
                 )
@@ -83,13 +83,13 @@ class Population:
                     offspring1, offspring2 = parent1.representation, parent2.representation
                 # Mutation with probability 'mu_prob'
                 if np.random.rand() < mu_prob:
-                    offspring1 = mutate(offspring1, problem=self.problem)
+                    offspring1 = mutate(offspring1, puzzle=self.puzzle)
                 if np.random.rand() < mu_prob:
-                    offspring2 = mutate(offspring2, problem=self.problem)
+                    offspring2 = mutate(offspring2, puzzle=self.puzzle)
                 
-                new_pop.append(Individual(representation=offspring1, problem=self.problem))
+                new_pop.append(Individual(representation=offspring1, puzzle=self.puzzle))
                 if len(new_pop) < self.size:
-                    new_pop.append(Individual(representation=offspring2, problem=self.problem))
+                    new_pop.append(Individual(representation=offspring2, puzzle=self.puzzle))
                 
             self.individuals = new_pop
             self.gen += 1

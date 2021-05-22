@@ -13,14 +13,14 @@ def two_point(p1, p2):
     crossover = np.random.choice([tp_co_row, tp_co_column, tp_co_box, tp_co_cell], size=1)[0]
     return crossover(p1, p2)
 
-def swap(individual, problem):
+def swap(individual, puzzle):
     mutation = np.random.choice([swap_in_row, swap_in_column, swap_in_box], size=1)[0]
-    return mutation(individual, problem)
+    return mutation(individual, puzzle)
 
 pop = Population(
     size=100, 
     optim='max', 
-    problem=basic
+    puzzle=basic
     )
 pop.evolve(
     gens=20, 
