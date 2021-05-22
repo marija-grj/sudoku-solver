@@ -50,7 +50,7 @@ Sudoku solver aims to solve a given puzzle using Genetic Algorithm.
 
 - puzzle - a Sudoku grid with missing values that algorithm aims to solve.
 - box - 3x3 sudoku subgrid ("block" or "region").
-- cell - smallest element of a Sudoku grid that has coordinates (x,y) where $`x \in [1,9]`$ and $`y \in [1,9]`$ and contain one digit value.
+- cell - smallest element of a Sudoku grid that has coordinates `(x,y)` where `x ∈ [1,9]` and `y ∈ [1,9]` and contain one digit value.
 - solved - optimal solution.
 
 ## Fitness

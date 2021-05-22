@@ -1,4 +1,5 @@
 import numpy as np
+from copy import deepcopy
 from .utils import box_to_row
 
 def swap_in_row(individual, problem):
@@ -66,3 +67,21 @@ def swap_in_box(individual, problem):
     i[box, mut_points[0]], i[box, mut_points[1]] = i[box, mut_points[1]], i[box, mut_points[0]]
 
     return box_to_row(i)
+
+def uniform_one(individual, problem):
+    """Uniform mutation for one random point
+
+    Args:
+        individual (Individual.representation): Potential sudoku solution
+        problem (Individual.problem): Initial sudoku problem
+
+    Returns:
+        (array): Mutated Individual
+    """
+    # Get a random row to perform a mutation
+    r, c = np.where(problem==0)
+    i = np.random.randint(len(r))
+    individual_m = deepcopy(individual)
+    individual_m[r[i], c[i]] = np.random.choice(np.delete(np.arange(1,10), individual[r[i], c[i]]-1), 1)
+
+    return individual_m
