@@ -27,21 +27,23 @@ def random_mu(individual, puzzle):
     return mutation(individual, puzzle)
 
 size=1500
-optim='max' 
+optim='min' 
 puzzle=hard 
 select=tournament
-crossover=random_co
+crossover=two_point
 mutate=random_mu
 co_prob=0.8
 mu_prob=0.4
+fitness='repetitions'
 
 
 fits = [[] for _ in range(5)]
 for i in range(5):
     pop = Population(
-    size=size, 
-    optim=optim, 
-    puzzle=puzzle
+        size=size, 
+        optim=optim, 
+        puzzle=puzzle,
+        fitness=fitness
     )
     fits[i] = pop.evolve(
         gens=100, 
@@ -50,10 +52,13 @@ for i in range(5):
         mutate=mutate, 
         co_prob=co_prob, 
         mu_prob=mu_prob,
-        verbose=True
+        verbose=False
         )
 for i in range(5):
-    plt.plot(range(1, len(fits[i])+1), 243-np.asarray(fits[i]), alpha=0.5, color='steelblue')
+    if optim == 'max':
+        plt.plot(range(1, len(fits[i])+1), 243-np.asarray(fits[i]), alpha=0.5, color='steelblue')
+    elif optim == 'min':
+        plt.plot(range(1, len(fits[i])+1), np.asarray(fits[i]), alpha=0.5, color='steelblue')
 # plt.axhline(y = 243, color='r')
 plt.title(f"Population: {size}, selection: {select.__name__},\ncrossover: {crossover.__name__}({co_prob}),\nmutation: {mutate.__name__}({mu_prob})")
 plt.xlabel("Generation")

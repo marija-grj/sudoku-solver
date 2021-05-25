@@ -11,7 +11,7 @@ def sp_co_row(p1, p2):
     Returns:
         Individuals: Two offspring, resulting from the crossover.
     """
-    co_row = np.random.choice(9, 1)
+    co_row = np.random.randint(1, 9)
     offspring1 = np.concatenate((p1[:co_row], p2[co_row:]), axis=0)
     offspring2 = np.concatenate((p2[:co_row], p1[co_row:]), axis=0)
     return offspring1, offspring2
@@ -26,7 +26,7 @@ def sp_co_column(p1, p2):
     Returns:
         Individuals: Two offspring, resulting from the crossover.
     """
-    co_col = np.random.choice(9, 1)
+    co_col = np.random.randint(1, 9)
     offspring1 = np.concatenate((p1[:,:co_col], p2[:,co_col:]), axis=1)
     offspring2 = np.concatenate((p2[:,:co_col], p1[:,co_col:]), axis=1)
     return offspring1, offspring2
@@ -41,7 +41,7 @@ def sp_co_box(p1, p2):
     Returns:
         Individuals: Two offspring, resulting from the crossover.
     """
-    co_box = np.random.choice(9, 1)
+    co_box = np.random.randint(1, 9)
     # Convert parents' boxes into rows
     p1_flat = box_to_row(p1)
     p2_flat = box_to_row(p2)
@@ -61,7 +61,7 @@ def sp_co_cell(p1, p2):
     Returns:
         Individuals: Two offspring, resulting from the crossover.
     """
-    co_cel = np.random.choice(9, 1)
+    co_cel = np.random.randint(1, 9)
     p1_flat, p2_flat = p1.flatten(), p2.flatten()
     offspring1 = np.concatenate((p1_flat[:co_cel], p2_flat[co_cel:])).reshape(9, 9)
     offspring2 = np.concatenate((p2_flat[:co_cel], p1_flat[co_cel:])).reshape(9, 9)

@@ -17,6 +17,10 @@ class Individual:
             
         if fitness == 'unique':
             self.fitness = self.evaluate_unique()
+        elif fitness == 'repetitions':
+            self.fitness = self.evaluate_repetitions()
+        else:
+            raise ValueError("Wrong fitness parameter value")
         self.puzzle = puzzle
     
     def __getitem__(self, position):
@@ -36,6 +40,17 @@ class Individual:
         row_fitness = sum([len(set(row)) for row in self.representation])
         column_fitness = sum([len(set(row)) for row in self.representation.transpose()])
         box_fitness = sum([len(set(row)) for row in box_to_row(self.representation)])
+    
+        return int(row_fitness + column_fitness + box_fitness)
+    
+    def evaluate_repetitions(self):
+        """
+        Sum of number of repeated numbers in each row, column and box. 
+        Minimum (target) fitness is 0 (all numbers are unique), maximum fitness is 216 (all are the same).
+        """
+        row_fitness = sum([9-len(set(row)) for row in self.representation])
+        column_fitness = sum([9-len(set(row)) for row in self.representation.transpose()])
+        box_fitness = sum([9-len(set(row)) for row in box_to_row(self.representation)])
     
         return int(row_fitness + column_fitness + box_fitness)
     
