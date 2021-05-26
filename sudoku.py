@@ -22,28 +22,27 @@ def random_co(p1, p2):
     crossover = np.random.choice([sp_co_row, sp_co_column, sp_co_box, sp_co_cell, tp_co_row, tp_co_column, tp_co_box, tp_co_cell], size=1)[0]
     return crossover(p1, p2)
 
-def random_mu(individual, puzzle):
-    mutation = np.random.choice([swap_in_row, swap_in_column, swap_in_box, uniform_one], size=1)[0]
-    return mutation(individual, puzzle)
 
 size=1500
 optim='max' 
 puzzle=hard 
 select=tournament
 crossover=two_point
-mutate=random_mu
-co_prob=0.8
-mu_prob=0.2
+mutate=uniform_one
+mutation='uniform'
+co_prob=0.7
+mu_prob=0.01
 fitness='unique_squared'
 
-
-fits = [[] for _ in range(5)]
-for i in range(5):
+repetitions = 5
+fits = [[] for _ in range(repetitions)]
+for i in range(repetitions):
     pop = Population(
         size=size, 
         optim=optim, 
         puzzle=puzzle,
-        fitness=fitness
+        fitness=fitness,
+        mutation=mutation
     )
     fits[i] = pop.evolve(
         gens=100, 
@@ -56,9 +55,9 @@ for i in range(5):
         )
 for i in range(5):
     if fitness == 'unique':
-        plt.plot(range(1, len(fits[i])+1), 243-np.asarray(fits[i])/216, alpha=0.5, color='steelblue')
+        plt.plot(range(1, len(fits[i])+1), (243-np.asarray(fits[i]))/216, alpha=0.5, color='steelblue')
     if fitness == 'unique_squared':
-        plt.plot(range(1, len(fits[i])+1), 2187-np.asarray(fits[i])/2160, alpha=0.5, color='steelblue')
+        plt.plot(range(1, len(fits[i])+1), (2187-np.asarray(fits[i]))/2160, alpha=0.5, color='steelblue')
     elif fitness == 'repetitions':
         plt.plot(range(1, len(fits[i])+1), np.asarray(fits[i])/216, alpha=0.5, color='steelblue')
 # plt.axhline(y = 243, color='r')

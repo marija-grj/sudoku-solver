@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 def draw(sudoku):
     """Pretty print for sudoku.
@@ -39,6 +40,22 @@ def box_to_row(individual):
     boxes_flattened = np.array([list(individual[b[0]:b[0]+3, b[1]:b[1]+3].flatten()) for b in box_base])
     
     return boxes_flattened
+
+def get_count(p, n):
+    """Get number of mutation repetitions.
+    
+    Args:
+        p: mutation probability for one Individual element (cell or row/column/box depending on mutation algorithm)
+        n: number of changeable elemtents (27 if swap mutation, 50-55 if uniform mutation)
+
+    Returns:
+        Number elements to mutate
+    """
+    probs = []
+    for k in range(n):
+        probs.append(math.comb(n, k)*p**k*(1-p)**(n-k))
+    return np.random.choice(range(n), p=probs)
+    
    
 if __name__ == '__main__':
     
