@@ -19,6 +19,8 @@ class Individual:
             self.fitness = self.evaluate_unique()
         elif fitness == 'repetitions':
             self.fitness = self.evaluate_repetitions()
+        elif fitness == 'unique_squared':
+            self.fitness = self.evaluate_unique_sq()
         else:
             raise ValueError("Wrong fitness parameter value")
         self.puzzle = puzzle
@@ -54,6 +56,17 @@ class Individual:
     
         return int(row_fitness + column_fitness + box_fitness)
     
+    def evaluate_unique_sq(self):
+        """
+        Sum of squared number of unique numbers in each row, column and box. 
+        Minimum fitness is 27 (all numbers are the same), maximum (target) fitness is 2187.
+        """
+        row_fitness = sum([len(set(row))**2 for row in self.representation])
+        column_fitness = sum([len(set(row))**2 for row in self.representation.transpose()])
+        box_fitness = sum([len(set(row))**2 for row in box_to_row(self.representation)])
+    
+        return int(row_fitness + column_fitness + box_fitness)
+    
     def __repr__(self):
         return f"Individual:\n{self.representation} \nFitness: {self.fitness}"
     
@@ -70,6 +83,7 @@ class Population:
         self.optim = optim # 'min' or 'max'
         self.puzzle = np.asarray(puzzle) # sudoku puzzle from sudoku_data: 'easy', 'hard', ...
         self.gen = 1
+        self.fit_func = fitness
         for _ in range(size):
             self.individuals.append(
                 Individual(
@@ -103,9 +117,9 @@ class Population:
                 if np.random.rand() < mu_prob:
                     offspring2 = mutate(offspring2, puzzle=self.puzzle)
                 
-                new_pop.append(Individual(representation=offspring1, puzzle=self.puzzle))
+                new_pop.append(Individual(representation=offspring1, puzzle=self.puzzle, fitness=self.fit_func))
                 if len(new_pop) < self.size:
-                    new_pop.append(Individual(representation=offspring2, puzzle=self.puzzle))
+                    new_pop.append(Individual(representation=offspring2, puzzle=self.puzzle, fitness=self.fit_func))
                 
             self.individuals = new_pop
             # Early stopping
@@ -125,9 +139,9 @@ class Population:
             if verbose: print(f'Generation {gen+2}, Best fitness: {max(self, key=attrgetter("fitness")).fitness}')
             
         if self.optim == "max":
-            print(f'Generation: {self.gen} \nBest Individual: \n{max(self, key=attrgetter("fitness"))}; \nGoal: {(9*9*3)}')
+            print(f'Generation: {self.gen} \nBest Individual: \n{max(self, key=attrgetter("fitness"))}; \nOptimization: max')
         elif self.optim == "min":
-            print(f'Generation: {self.gen} \nBest Individual: \n{min(self, key=attrgetter("fitness"))}; \nGoal: 0')
+            print(f'Generation: {self.gen} \nBest Individual: \n{min(self, key=attrgetter("fitness"))}; \nOptimization: min')
             
         print("Done")
         return fitnesses

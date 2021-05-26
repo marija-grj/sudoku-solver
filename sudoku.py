@@ -27,14 +27,14 @@ def random_mu(individual, puzzle):
     return mutation(individual, puzzle)
 
 size=1500
-optim='min' 
+optim='max' 
 puzzle=hard 
 select=tournament
 crossover=two_point
 mutate=random_mu
 co_prob=0.8
-mu_prob=0.4
-fitness='repetitions'
+mu_prob=0.2
+fitness='unique_squared'
 
 
 fits = [[] for _ in range(5)]
@@ -55,14 +55,16 @@ for i in range(5):
         verbose=False
         )
 for i in range(5):
-    if optim == 'max':
-        plt.plot(range(1, len(fits[i])+1), 243-np.asarray(fits[i]), alpha=0.5, color='steelblue')
-    elif optim == 'min':
-        plt.plot(range(1, len(fits[i])+1), np.asarray(fits[i]), alpha=0.5, color='steelblue')
+    if fitness == 'unique':
+        plt.plot(range(1, len(fits[i])+1), 243-np.asarray(fits[i])/216, alpha=0.5, color='steelblue')
+    if fitness == 'unique_squared':
+        plt.plot(range(1, len(fits[i])+1), 2187-np.asarray(fits[i])/2160, alpha=0.5, color='steelblue')
+    elif fitness == 'repetitions':
+        plt.plot(range(1, len(fits[i])+1), np.asarray(fits[i])/216, alpha=0.5, color='steelblue')
 # plt.axhline(y = 243, color='r')
-plt.title(f"Population: {size}, selection: {select.__name__},\ncrossover: {crossover.__name__}({co_prob}),\nmutation: {mutate.__name__}({mu_prob})")
+plt.title(f"Population: {size}, selection: {select.__name__},\ncrossover: {crossover.__name__}({co_prob}),mutation: {mutate.__name__}({mu_prob}),\nfitness: {fitness}")
 plt.xlabel("Generation")
-plt.ylabel("Loss")
+plt.ylabel("Normalized loss")
 plt.ylim(0)
 plt.tight_layout()
 plt.show()
