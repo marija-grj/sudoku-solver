@@ -155,7 +155,9 @@ class Population:
             if self.optim == "max":
                 best_fitness = max(self, key=attrgetter("fitness")).fitness
                 fitnesses.append(best_fitness)
-                if best_fitness == 243:
+                if (self.fit_func == 'unique') & (best_fitness == 243):
+                    break
+                if (self.fit_func == 'unique_squared') & (best_fitness == 2187):
                     break
             elif self.optim == "min":
                 best_fitness = min(self, key=attrgetter("fitness")).fitness

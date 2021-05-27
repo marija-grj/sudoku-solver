@@ -1,10 +1,11 @@
 import numpy as np
 from charles.charles import Individual, Population
-from data.sudoku_data import basic, easy, hard
+from data.sudoku_data import basic, very_easy, easy, moderate, hard, very_hard
 from charles.crossover import sp_co_row, sp_co_box, sp_co_column, sp_co_cell, tp_co_row, tp_co_column, tp_co_box, tp_co_cell
 from charles.mutation import swap_in_row, swap_in_box, swap_in_column, uniform_one
 from charles.selection import fps, tournament, rank
 from matplotlib import pyplot as plt
+import time
 
 def single_point(p1, p2):
     crossover = np.random.choice([sp_co_row, sp_co_column, sp_co_box, sp_co_cell], size=1)[0]
@@ -24,44 +25,58 @@ def random_co(p1, p2):
 
 
 size=1500
-optim='max' 
-puzzle=hard 
-select=tournament
+optim='max'
+puzzle=[very_easy, moderate, very_hard]
+select=rank
 crossover=two_point
-mutate=uniform_one
-mutation='uniform'
+mutate=swap
+mutation='swap'
 co_prob=0.7
 mu_prob=0.01
 fitness='unique_squared'
 
 repetitions = 5
-fits = [[] for _ in range(repetitions)]
-for i in range(repetitions):
-    pop = Population(
-        size=size, 
-        optim=optim, 
-        puzzle=puzzle,
-        fitness=fitness,
-        mutation=mutation
-    )
-    fits[i] = pop.evolve(
-        gens=100, 
-        select=select, 
-        crossover=crossover,
-        mutate=mutate, 
-        co_prob=co_prob, 
-        mu_prob=mu_prob,
-        verbose=False
+param = ['very_easy', 'moderate', 'very_hard']
+fits = [[0 for _ in range(repetitions)] for _ in range(len(param))]
+total = 0
+start = time.time()
+for i in range(len(param)):
+    for r in range(repetitions):
+        print(f"------{param[i]}-{r+1}------")
+        
+        pop = Population(
+            size=size, 
+            optim=optim, 
+            puzzle=puzzle[i],
+            fitness=fitness,
+            mutation=mutation
         )
-for i in range(5):
-    if fitness == 'unique':
-        plt.plot(range(1, len(fits[i])+1), (243-np.asarray(fits[i]))/216, alpha=0.5, color='steelblue')
-    if fitness == 'unique_squared':
-        plt.plot(range(1, len(fits[i])+1), (2187-np.asarray(fits[i]))/2160, alpha=0.5, color='steelblue')
-    elif fitness == 'repetitions':
-        plt.plot(range(1, len(fits[i])+1), np.asarray(fits[i])/216, alpha=0.5, color='steelblue')
+        fits[i][r] = pop.evolve(
+            gens=100, 
+            select=select, 
+            crossover=crossover,
+            mutate=mutate, 
+            co_prob=co_prob, 
+            mu_prob=mu_prob,
+            verbose=False
+            )
+        stop = time.time()
+        diff = stop - start
+        start = stop
+        total = total + diff
+        print(f"Time: {round(total,4)} (+{round(diff, 4)})")
+print(fits)
+colors = ['steelblue','lightcoral','darkseagreen']
+for i in range(len(param)):
+    for r in range(repetitions):
+        if fitness == 'unique':
+            plt.plot(range(1, len(fits[i][r])+1), (243-np.asarray(fits[i][r]))/216, alpha=0.5, color=colors[i])
+        if fitness == 'unique_squared':
+            plt.plot(range(1, len(fits[i][r])+1), (2187-np.asarray(fits[i][r]))/2160, alpha=0.5, color=colors[i])
+        elif fitness == 'repetitions':
+            plt.plot(range(1, len(fits[i][r])+1), np.asarray(fits[i][r])/216, alpha=0.5, color=colors[i])
 # plt.axhline(y = 243, color='r')
-plt.title(f"Population: {size}, selection: {select.__name__},\ncrossover: {crossover.__name__}({co_prob}),mutation: {mutate.__name__}({mu_prob}),\nfitness: {fitness}")
+plt.title(f"Population: {size}, selection: {select.__name__}, crossover: {crossover.__name__}({co_prob}),\nmutation: {mutate.__name__}({mu_prob}), fitness: {fitness},\npuzzle: ['very_easy','moderate','very_hard']")
 plt.xlabel("Generation")
 plt.ylabel("Normalized loss")
 plt.ylim(0)
