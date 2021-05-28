@@ -26,17 +26,18 @@ def random_co(p1, p2):
 
 size=1500
 optim='max'
-puzzle=[very_easy, moderate, very_hard]
+puzzle=hard
 select=rank
 crossover=two_point
 mutate=swap
 mutation='swap'
 co_prob=0.7
 mu_prob=0.01
-fitness='unique_squared'
+fitness='unique'
+elitism=[False, True]
 
 repetitions = 5
-param = ['very_easy', 'moderate', 'very_hard']
+param = ['no elitism','elitism']
 fits = [[0 for _ in range(repetitions)] for _ in range(len(param))]
 total = 0
 start = time.time()
@@ -47,7 +48,7 @@ for i in range(len(param)):
         pop = Population(
             size=size, 
             optim=optim, 
-            puzzle=puzzle[i],
+            puzzle=puzzle,
             fitness=fitness,
             mutation=mutation
         )
@@ -58,6 +59,7 @@ for i in range(len(param)):
             mutate=mutate, 
             co_prob=co_prob, 
             mu_prob=mu_prob,
+            elitism=elitism[i],
             verbose=False
             )
         stop = time.time()
@@ -65,7 +67,7 @@ for i in range(len(param)):
         start = stop
         total = total + diff
         print(f"Time: {round(total,4)} (+{round(diff, 4)})")
-print(fits)
+# print(fits)
 colors = ['steelblue','lightcoral','darkseagreen']
 for i in range(len(param)):
     for r in range(repetitions):
@@ -76,7 +78,7 @@ for i in range(len(param)):
         elif fitness == 'repetitions':
             plt.plot(range(1, len(fits[i][r])+1), np.asarray(fits[i][r])/216, alpha=0.5, color=colors[i])
 # plt.axhline(y = 243, color='r')
-plt.title(f"Population: {size}, selection: {select.__name__}, crossover: {crossover.__name__}({co_prob}),\nmutation: {mutate.__name__}({mu_prob}), fitness: {fitness},\npuzzle: ['very_easy','moderate','very_hard']")
+plt.title(f"Population: {size}, selection: {select.__name__}, crossover: {crossover.__name__}({co_prob}),\nmutation: {mutate.__name__}({mu_prob}), fitness: {fitness},\n elitism: ['no','yes']")
 plt.xlabel("Generation")
 plt.ylabel("Normalized loss")
 plt.ylim(0)
