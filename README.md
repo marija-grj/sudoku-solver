@@ -58,8 +58,6 @@ Sudoku solver aims to solve a given puzzle using Genetic Algorithm.
 
 ## Fitness
 
-### Maximization of unique values
-
 Solved Sudoku contains all 1 to 9 values in each row, column and box, or, in other words, contains maximum number (nine) of unique values in each row, column and box.  
 
 -	`evaluate_unique` Sum of number of unique values in each row, column, and box.
