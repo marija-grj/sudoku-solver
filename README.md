@@ -1,7 +1,7 @@
 ---
 title: Sudoku solver using Genetic Algorithm
-authors: Marija Grjazniha (m20201061@novaims.unl.pt), Kostas Griska (m20200744@novaims.unl.pt)
-date: May 22, 2021
+authors: Kostas Griska (m20200744@novaims.unl.pt), Marija Grjazniha (m20201061@novaims.unl.pt)
+date: May 28, 2021
 ---
 
 ## Structure
@@ -15,7 +15,10 @@ date: May 22, 2021
 │   └── utils.py
 ├── data
 │   └── sudoku_data.py
-└── sudoku.py
+├── sudoku.py
+│------------------------
+├── images
+└── results
 ```
 
 ## Sudoku data
@@ -60,6 +63,19 @@ Sudoku solver aims to solve a given puzzle using Genetic Algorithm.
 Solved Sudoku contains all 1 to 9 values in each row, column and box, or, in other words, contains maximum number (nine) of unique values in each row, column and box.  
 Fitness function `evaluate_unique` calculates number of unique values withing each row, column and box, and sums those numbers. Therefore, fitness value of the solved Sudoku is `9·9·3=243` (`9` unique values in each of `9` value of `3` dimensions (row, column, box)). (Theoretically) Minimal fitness value is `1·9·3=27` when all grid values are the same.  
 
+-	Sum of number of unique values in each row, column, and box.
+    -	Target value: 243 (all unique).
+    -	Theoretical minimum: 27 (all the same).
+-	Sum of repeated values in each row, column, and box.
+    -	Target value: 0 (all unique).
+    -	Maximal value: 216 (all values are same, i.e., 8 repetitions in each r/c/b).
+-	Sum of squared number of unique values in each row, column, and box.
+    -	Target value: 2187 (all unique).
+    -	Theoretical minimum: 27 (all the same).
+    -	Number of unique values in a specific r/c/b increased by 1, impacts fitness value differently depending on the initial number.
+    -	Wider range of fitness values.
+
+
 ## Crossover
 
 _Single point crossover_ functions split parent grids on a single point row-, column, box- or cellwise. One offspring inherit first part from parent 1 and the other from parent 2. Second offspring inherits the rest.  
@@ -80,3 +96,4 @@ Mutation function `swap_in_row`, `swap_in_column` and `swap_in_box` randomly sel
 ### Box to row
 
 ![](https://github.com/marija-grj/sudoku-solver/blob/main/images/box_to_row.png?raw=true)
+
