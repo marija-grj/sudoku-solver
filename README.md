@@ -61,15 +61,14 @@ Sudoku solver aims to solve a given puzzle using Genetic Algorithm.
 ### Maximization of unique values
 
 Solved Sudoku contains all 1 to 9 values in each row, column and box, or, in other words, contains maximum number (nine) of unique values in each row, column and box.  
-Fitness function `evaluate_unique` calculates number of unique values withing each row, column and box, and sums those numbers. Therefore, fitness value of the solved Sudoku is `9·9·3=243` (`9` unique values in each of `9` value of `3` dimensions (row, column, box)). (Theoretically) Minimal fitness value is `1·9·3=27` when all grid values are the same.  
 
--	Sum of number of unique values in each row, column, and box.
+-	`evaluate_unique` Sum of number of unique values in each row, column, and box.
     -	Target value: 243 (all unique).
     -	Theoretical minimum: 27 (all the same).
--	Sum of repeated values in each row, column, and box.
+-	`evaluate_repetitions` Sum of repeated values in each row, column, and box.
     -	Target value: 0 (all unique).
     -	Maximal value: 216 (all values are same, i.e., 8 repetitions in each r/c/b).
--	Sum of squared number of unique values in each row, column, and box.
+-	`evaluate_unique_sq` Sum of squared number of unique values in each row, column, and box.
     -	Target value: 2187 (all unique).
     -	Theoretical minimum: 27 (all the same).
     -	Number of unique values in a specific r/c/b increased by 1, impacts fitness value differently depending on the initial number.
@@ -91,9 +90,15 @@ Mutation function `swap_in_row`, `swap_in_column` and `swap_in_box` randomly sel
 
 ![](https://github.com/marija-grj/sudoku-solver/blob/main/images/swap_mutation.png?raw=true)
 
+### Uniform mutation
+
+Mutation function `uniform_one` converts one random (changeable) value to a different one.
+
 ## Utils
 
 ### Box to row
+
+One of the essential functions that allows easily convert boxes into rows and back.
 
 ![](https://github.com/marija-grj/sudoku-solver/blob/main/images/box_to_row.png?raw=true)
 
